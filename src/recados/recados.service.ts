@@ -1,19 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
+import { Recado } from './entities/recado.entity';
 
 @Injectable()
 export class RecadosService {
-  create(createRecadoDto: CreateRecadoDto) {
-    return 'This action adds a new recado';
+  private lastId: 1;
+  private recados: Recado[] = [
+    {
+      id: 1,
+      texto: 'este e um recado test',
+      de: 'joana',
+      para: 'eu',
+      lido: false,
+      data: new Date(),
+    },
+  ];
+
+  create(createRecadoDto: any) {
+    this.lastId++;
+    const id = this.lastId;
+    const newRecado = {
+      id,
+      ...createRecadoDto,
+    };
+    this.recados.push(newRecado);
+
+    return newRecado;
   }
 
   findAll() {
-    return `This action returns all recados`;
+    return this.recados;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} recado`;
+    return this.recados.find(item => item.id === id);
   }
 
   update(id: number, updateRecadoDto: UpdateRecadoDto) {
