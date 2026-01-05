@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { Recado } from './entities/recado.entity';
 
 @Injectable()
 export class RecadosService {
-  private lastId: 1;
+  private lastId: number = 1;
+
   private recados: Recado[] = [
     {
       id: 1,
@@ -16,12 +18,15 @@ export class RecadosService {
     },
   ];
 
-  create(createRecadoDto: any) {
+  create(createRecadoDto: CreateRecadoDto) {
     this.lastId++;
+
     const id = this.lastId;
     const newRecado = {
       id,
       ...createRecadoDto,
+      lido: false,
+      data: new Date(),
     };
     this.recados.push(newRecado);
 
@@ -33,11 +38,19 @@ export class RecadosService {
   }
 
   findOne(id: number) {
-    return this.recados.find(item => item.id === id);
+    const recado = this.recados.find(item => item.id === id);
+    if (recado) {
+      return recado;
+    }
+    throw new NotFoundException('error do servidor');
   }
 
   update(id: number, updateRecadoDto: UpdateRecadoDto) {
-    return `This action updates a #${id} recado`;
+    const recadoExisteIndex = this.recados.findIndex(item => item.id === id);
+
+    if (recadoExisteIndex < 0) {
+      new Error('erro');
+    }
   }
 
   remove(id: number) {
