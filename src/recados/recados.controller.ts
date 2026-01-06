@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { RecadosService } from './recados.service';
@@ -19,7 +21,7 @@ export class RecadosController {
   create(@Body() createRecadoDto: CreateRecadoDto) {
     return this.recadosService.create(createRecadoDto);
   }
-
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.recadosService.findAll();

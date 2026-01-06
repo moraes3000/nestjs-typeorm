@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'src/auth/auth.module';
 import { RecadosModule } from 'src/recados/recados.module';
+import { UsersModule } from 'src/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -17,6 +19,8 @@ import { AppService } from './app.service';
       synchronize: true, // ❌ não usar em produção
     }),
     RecadosModule,
+    AuthModule,
+    UsersModule,
   ],
 
   controllers: [AppController],
