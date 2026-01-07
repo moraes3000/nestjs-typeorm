@@ -1,8 +1,13 @@
 // src/users/user.entity.ts
+import { Group } from 'src/groups/entities/group.entity';
+import { UserPermission } from 'src/permissions/entities/user-permission.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -22,4 +27,13 @@ export class User {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToMany(() => Group, group => group.users)
+  @JoinTable({
+    name: 'user_groups',
+  })
+  groups: Group[];
+
+  @OneToMany(() => UserPermission, up => up.user)
+  permissions: UserPermission[];
 }

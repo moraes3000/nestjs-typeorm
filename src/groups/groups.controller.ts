@@ -1,15 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupsService } from './groups.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { GroupsService } from './groups.service';
 
+@UseGuards(AuthGuard('jwt')) // 🔐 todas as rotas protegidas
 @Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupsService.create(createGroupDto);
+  create(@Body() dto: CreateGroupDto) {
+    return this.groupsService.create(dto);
   }
 
   @Get()
@@ -19,16 +30,16 @@ export class GroupsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.groupsService.findOne(+id);
+    return this.groupsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupsService.update(+id, updateGroupDto);
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateGroupDto) {
+    return this.groupsService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.groupsService.remove(+id);
+    return this.groupsService.remove(id);
   }
 }
